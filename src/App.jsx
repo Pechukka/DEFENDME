@@ -74,6 +74,7 @@ function StepperBar({ step }) {
 }
 
 export default function App() {
+  const [started, setStarted] = useState(false);
   const [step, setStep] = useState(0);
   const [formData, setFormData] = useState({ airline: '', flightNumber: '', issue: '', file: null });
   const [showResult, setShowResult] = useState(false);
@@ -99,7 +100,7 @@ export default function App() {
     setShowResult(true);
   };
 
-  const reset = () => { setShowResult(false); setStep(0); setFormData({ airline: '', flightNumber: '', issue: '', file: null }); };
+  const reset = () => { setShowResult(false); setStarted(false); setStep(0); setFormData({ airline: '', flightNumber: '', issue: '', file: null }); };
 
   const selectedIssue = issues.find(i => i.id === formData.issue);
   const comp = selectedIssue ? `${selectedIssue.min}€ – ${selectedIssue.max}€` : '250€ – 600€';
@@ -113,15 +114,11 @@ export default function App() {
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-b border-slate-100">
         <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src="/logo.svg" alt="DefendMe" className="w-10 h-10" />
+            <img src="/defendme_logo.png" alt="DefendMe" className="w-10 h-10" />
             <span className="text-2xl font-black tracking-tight" style={{ color: B.dark }}>
               defend<span style={{ color: B.primary }}>Me</span>
             </span>
           </div>
-          <button className="px-6 py-2.5 rounded-full text-sm font-bold text-white transition-all hover:scale-105 hover:shadow-lg active:scale-95"
-                  style={gradBtn}>
-            Comenzar reclamación
-          </button>
         </div>
       </header>
 
@@ -149,12 +146,15 @@ export default function App() {
           </div>
 
           {/* Logo grande */}
-          <div className="flex justify-center mb-5 animate-fadeIn">
-            <img src="/logo.svg" alt="DefendMe" className="w-28 h-28 drop-shadow-2xl" />
+          <div className="flex flex-col items-center mb-6 animate-fadeIn">
+            <img src="/defendme_logo.png" alt="DefendMe" className="w-24 h-24 drop-shadow-xl mb-3" />
+            <span className="text-6xl md:text-7xl font-black tracking-tight" style={{ color: B.dark }}>
+              defend<span style={{ color: B.primary }}>Me</span>
+            </span>
           </div>
 
-          <h1 className="text-5xl md:text-6xl font-black tracking-tight mb-5 animate-slideUp"
-              style={{ color: B.dark, lineHeight: '1.1' }}>
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-5 animate-slideUp"
+              style={{ color: B.dark, lineHeight: '1.2' }}>
             Reclama tu compensación
             <br />
             <span style={{ color: B.primary }}>en menos de 1 minuto</span>
@@ -179,11 +179,22 @@ export default function App() {
               </div>
             ))}
           </div>
+
+          {!started && (
+            <div className="mt-10 animate-slideUp" style={{ animationDelay: '0.3s' }}>
+              <button onClick={() => { setStarted(true); setTimeout(() => document.getElementById('form-section')?.scrollIntoView({ behavior: 'smooth' }), 100); }}
+                      className="px-10 py-4 rounded-full text-white font-black text-lg transition-all hover:scale-105 hover:shadow-2xl active:scale-95"
+                      style={gradBtn}>
+                Comenzar reclamación →
+              </button>
+            </div>
+          )}
         </div>
       </section>
 
       {/* ── FORM SECTION ───────────────────────────────────────────────── */}
-      <section className="py-16 bg-white">
+      {started && (
+      <section id="form-section" className="py-16 bg-white">
         <div className="max-w-2xl mx-auto px-6">
 
           {!showResult && !loading && (
@@ -420,12 +431,13 @@ export default function App() {
           )}
         </div>
       </section>
+      )}
 
       {/* ── FOOTER ─────────────────────────────────────────────────────── */}
       <footer className="border-t" style={{ borderColor: `${B.primary}18`, background: B.lighter }}>
         <div className="max-w-6xl mx-auto px-6 py-10 text-center">
           <div className="flex items-center justify-center gap-2 mb-3">
-            <img src="/logo.svg" alt="DefendMe" className="w-7 h-7" />
+            <img src="/defendme_logo.png" alt="DefendMe" className="w-7 h-7" />
             <span className="font-black text-lg" style={{ color: B.dark }}>
               defend<span style={{ color: B.primary }}>Me</span>
             </span>
